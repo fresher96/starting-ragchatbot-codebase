@@ -220,7 +220,7 @@ header h1 {
 
 /* Collapsible Sources */
 .sources-collapsible {
-    margin-top: 0.5rem;
+    margin-top: 0.75rem;
     font-size: 0.75rem;
     color: var(--text-secondary);
 }
@@ -230,6 +230,7 @@ header h1 {
     padding: 0.25rem 0.5rem;
     user-select: none;
     font-weight: 500;
+    letter-spacing: 0.02em;
 }
 
 .sources-collapsible summary:hover {
@@ -237,12 +238,36 @@ header h1 {
 }
 
 .sources-collapsible[open] summary {
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.5rem;
 }
 
 .sources-content {
-    padding: 0 0.5rem 0.25rem 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    padding: 0 0.5rem 0.25rem 0.5rem;
+}
+
+.sources-content a,
+.sources-content span {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    background: var(--surface-hover);
+    border: 1px solid var(--border-color);
     color: var(--text-secondary);
+    text-decoration: none;
+    white-space: nowrap;
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+
+.sources-content a:hover {
+    color: var(--text-primary);
+    border-color: var(--primary-color);
+    background: rgba(37, 99, 235, 0.12);
 }
 
 /* Markdown formatting styles */

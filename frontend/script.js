@@ -126,8 +126,8 @@ function addMessage(content, type, sources = null, isWelcome = false) {
             if (s.url) {
                 return `<a href="${escapeHtml(s.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(s.label)}</a>`;
             }
-            return escapeHtml(s.label);
-        }).join(', ');
+            return `<span>${escapeHtml(s.label)}</span>`;
+        }).join('');
         html += `
             <details class="sources-collapsible">
                 <summary class="sources-header">Sources</summary>
