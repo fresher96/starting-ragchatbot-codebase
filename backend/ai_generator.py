@@ -68,12 +68,14 @@ Provide only the direct answer to what was asked.
         api_params = {
             **self.base_params,
             "messages": [{"role": "user", "content": query}],
-            "system": system_content
+            "system": [{"type": "text", "text": system_content, "cache_control": {"type": "ephemeral"}}]
         }
-        
-        # Add tools if available
+
+        # Add tools if available; cache the last tool definition to cover system + tools
         if tools:
-            api_params["tools"] = tools
+            cached_tools = [t.copy() for t in tools]
+            cached_tools[-1] = {**cached_tools[-1], "cache_control": {"type": "ephemeral"}}
+            api_params["tools"] = cached_tools
             api_params["tool_choice"] = {"type": "auto"}
         
         # Get response from Claude
@@ -119,8 +121,9 @@ Provide only the direct answer to what was asked.
                     "content": tool_result
                 })
         
-        # Add tool results as single message
+        # Add tool results as single message; mark last result cacheable to cover full context
         if tool_results:
+            tool_results[-1] = {**tool_results[-1], "cache_control": {"type": "ephemeral"}}
             messages.append({"role": "user", "content": tool_results})
         
         # Prepare final API call without tools
