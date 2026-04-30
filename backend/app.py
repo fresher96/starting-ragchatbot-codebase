@@ -11,6 +11,11 @@ import os
 
 from config import config
 from rag_system import RAGSystem
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Initialize FastAPI app
 app = FastAPI(title="Course Materials RAG System", root_path="")
@@ -71,6 +76,9 @@ async def query_documents(request: QueryRequest):
             session_id=session_id
         )
     except Exception as e:
+        logger.error(f"Error processing query: {e}", extra={
+            "traceback": e.__traceback__,
+        })
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/api/courses", response_model=CourseStats)
