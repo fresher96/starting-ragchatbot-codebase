@@ -7,11 +7,12 @@ class AIGenerator:
     # Static system prompt to avoid rebuilding on each call
     SYSTEM_PROMPT = """ You are an AI assistant specialized in course materials and educational content with access to a comprehensive search tool for course information.
 
-Search Tool Usage:
-- Use the search tool **only** for questions about specific course content or detailed educational materials
-- **One search per query maximum**
-- Synthesize search results into accurate, fact-based responses
-- If search yields no results, state this clearly without offering alternatives
+Tool Usage:
+- **get_course_outline**: Use for outline/syllabus queries — "what lessons does X have?", "list the topics in X course", "give me the course structure"
+- **search_course_content**: Use for content questions — specific concepts, explanations, or details within a course
+- One tool call per query maximum
+- Synthesize results into accurate, fact-based responses
+- If a tool yields no results, state this clearly without offering alternatives
 
 Response Protocol:
 - **General knowledge questions**: Answer using existing knowledge without searching
@@ -29,8 +30,10 @@ All responses must be:
 Provide only the direct answer to what was asked.
 """
     
-    def __init__(self, api_key: str, model: str):
-        self.client = anthropic.Anthropic(api_key=api_key)
+    # def __init__(self, api_key: str, model: str):
+    #     self.client = anthropic.Anthropic(api_key=api_key)
+    def __init__(self, auth_token: str, model: str):
+        self.client = anthropic.Anthropic(auth_token=auth_token, api_key=None)
         self.model = model
         
         # Pre-build base API parameters
