@@ -122,11 +122,19 @@ function addMessage(content, type, sources = null, isWelcome = false) {
     let html = `<div class="message-content">${displayContent}</div>`;
     
     if (sources && sources.length > 0) {
-        const sourceHtml = sources.map(s => {
+        const seen = new Set();
+        const uniqueSources = sources.filter(s => {
+            const key = s.url || s.label;
+            if (seen.has(key)) return false;
+            seen.add(key);
+            return true;
+        });
+        const sourceHtml = uniqueSources.map(s => {
+            const name = getShortName(s.url, s.label);
             if (s.url) {
-                return `<a href="${escapeHtml(s.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(s.label)}</a>`;
+                return `<a href="${escapeHtml(s.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(name)}</a>`;
             }
-            return `<span>${escapeHtml(s.label)}</span>`;
+            return `<span>${escapeHtml(name)}</span>`;
         }).join('');
         html += `
             <details class="sources-collapsible">
@@ -141,6 +149,30 @@ function addMessage(content, type, sources = null, isWelcome = false) {
     chatMessages.scrollTop = chatMessages.scrollHeight;
     
     return messageId;
+}
+
+function getShortName(url, label) {
+    if (!url) return label;
+    try {
+        const segments = new URL(url).pathname.split('/').filter(Boolean);
+        const lessonIdx = segments.indexOf('lesson');
+        if (lessonIdx !== -1 && segments[lessonIdx + 2]) {
+            return prettifySlug(segments[lessonIdx + 2]);
+        }
+        const courseIdx = Math.max(segments.indexOf('short-courses'), segments.indexOf('courses'));
+        if (courseIdx !== -1 && segments[courseIdx + 1]) {
+            return prettifySlug(segments[courseIdx + 1], 4);
+        }
+        return prettifySlug(segments[segments.length - 1]) || label;
+    } catch {
+        return label;
+    }
+}
+
+function prettifySlug(slug, maxWords) {
+    const words = slug.replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase()).split(' ');
+    if (maxWords && words.length > maxWords) return words.slice(0, maxWords).join(' ') + '…';
+    return words.join(' ');
 }
 
 // Helper function to escape HTML for user messages
