@@ -30,8 +30,10 @@ All responses must be:
 Provide only the direct answer to what was asked.
 """
     
-    def __init__(self, api_key: str, model: str):
-        self.client = anthropic.Anthropic(api_key=api_key)
+    # def __init__(self, api_key: str, model: str):
+    #     self.client = anthropic.Anthropic(api_key=api_key)
+    def __init__(self, auth_token: str, model: str):
+        self.client = anthropic.Anthropic(auth_token=auth_token, api_key=None)
         self.model = model
         
         # Pre-build base API parameters

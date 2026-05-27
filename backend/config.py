@@ -9,7 +9,8 @@ load_dotenv()
 class Config:
     """Configuration settings for the RAG system"""
     # Anthropic API settings
-    ANTHROPIC_API_KEY: str = os.getenv("ANTHROPIC_API_KEY", "")
+    # ANTHROPIC_API_KEY: str = os.getenv("ANTHROPIC_API_KEY", "")
+    ANTHROPIC_TOKEN: str = os.getenv("ANTHROPIC_TOKEN", "")
     ANTHROPIC_MODEL: str = "claude-haiku-4-5-20251001"
     
     # Embedding model settings
