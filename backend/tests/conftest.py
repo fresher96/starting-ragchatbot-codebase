@@ -78,6 +78,7 @@ _app_module.rag_system = _mock_rag
 # Fixtures
 # ---------------------------------------------------------------------------
 
+
 @pytest.fixture
 def mock_rag() -> MagicMock:
     """
