@@ -32,3 +32,5 @@ Thumbs.db
 
 # custom
 .playwright-mcp/
+.worktrees/
+.claude/
