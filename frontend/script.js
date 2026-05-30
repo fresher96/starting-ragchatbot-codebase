@@ -15,11 +15,39 @@ document.addEventListener('DOMContentLoaded', () => {
     sendButton = document.getElementById('sendButton');
     totalCourses = document.getElementById('totalCourses');
     courseTitles = document.getElementById('courseTitles');
-    
+
+    initTheme();
     setupEventListeners();
     createNewSession();
     loadCourseStats();
 });
+
+// Theme
+function initTheme() {
+    const saved = localStorage.getItem('theme');
+    const btn = document.getElementById('themeToggle');
+    if (saved === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+        if (btn) btn.setAttribute('aria-label', 'Switch to dark mode');
+    }
+    if (btn) btn.addEventListener('click', toggleTheme);
+}
+
+function toggleTheme() {
+    const html = document.documentElement;
+    const btn = document.getElementById('themeToggle');
+    const isLight = html.getAttribute('data-theme') === 'light';
+
+    if (isLight) {
+        html.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'dark');
+        if (btn) btn.setAttribute('aria-label', 'Switch to light mode');
+    } else {
+        html.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+        if (btn) btn.setAttribute('aria-label', 'Switch to dark mode');
+    }
+}
 
 // Event Listeners
 function setupEventListeners() {
