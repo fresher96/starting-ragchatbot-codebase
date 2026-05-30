@@ -54,6 +54,7 @@ app.add_middleware(
     expose_headers=["*"],
 )
 
+
 # Pydantic models for request/response
 class QueryRequest(BaseModel):
     """Request model for course queries"""

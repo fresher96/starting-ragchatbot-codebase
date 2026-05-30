@@ -9,7 +9,7 @@ for arg in "$@"; do
   [[ "$arg" == "--fix" ]] && FIX=true
 done
 
-TARGETS="backend/ tests/ main.py"
+TARGETS="backend/ main.py"
 
 echo "=== Black ==="
 if $FIX; then
@@ -19,7 +19,7 @@ else
 fi
 
 echo "=== Tests ==="
-uv run pytest tests/ -q
+uv run pytest -q .
 
 echo ""
 echo "All checks passed."
