@@ -26,17 +26,21 @@
 
 /* Light Theme Variables */
 [data-theme="light"] {
-    --background: #f8fafc;
+    --background: #e8eef4;
     --surface: #ffffff;
     --surface-hover: #f1f5f9;
     --text-primary: #0f172a;
     --text-secondary: #64748b;
-    --border-color: #e2e8f0;
-    --assistant-message: #f1f5f9;
-    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --border-color: #94a3b8;
+    --assistant-message: #f8fafc;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.12);
     --welcome-bg: #eff6ff;
     --welcome-border: #93c5fd;
     --focus-ring: rgba(37, 99, 235, 0.15);
+}
+
+[data-theme="light"] .message.assistant .message-content {
+    border: 1px solid var(--border-color);
 }
 
 /* Base Styles */
