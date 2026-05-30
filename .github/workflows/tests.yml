@@ -14,4 +14,4 @@ jobs:
     - name: install dependencies
       run: uv sync
     - name: run tests
-      run: uv run pytest -v .
+      run: uv run pytest -v -W ignore .
