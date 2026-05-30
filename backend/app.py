@@ -2,6 +2,7 @@ import warnings
 
 warnings.filterwarnings("ignore", message="resource_tracker: There appear to be.*")
 
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -18,8 +19,27 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# Initialize RAG system
+rag_system = RAGSystem(config)
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    docs_path = "../docs"
+    if os.path.exists(docs_path):
+        print("Loading initial documents...")
+        try:
+            courses, chunks = rag_system.add_course_folder(
+                docs_path, clear_existing=False
+            )
+            print(f"Loaded {courses} courses with {chunks} chunks")
+        except Exception as e:
+            print(f"Error loading documents: {e}")
+    yield
+
+
 # Initialize FastAPI app
-app = FastAPI(title="Course Materials RAG System", root_path="")
+app = FastAPI(title="Course Materials RAG System", root_path="", lifespan=lifespan)
 
 # Add trusted host middleware for proxy
 app.add_middleware(TrustedHostMiddleware, allowed_hosts=["*"])
@@ -33,10 +53,6 @@ app.add_middleware(
     allow_headers=["*"],
     expose_headers=["*"],
 )
-
-# Initialize RAG system
-rag_system = RAGSystem(config)
-
 
 # Pydantic models for request/response
 class QueryRequest(BaseModel):
@@ -103,21 +119,6 @@ async def get_course_stats():
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
-
-@app.on_event("startup")
-async def startup_event():
-    """Load initial documents on startup"""
-    docs_path = "../docs"
-    if os.path.exists(docs_path):
-        print("Loading initial documents...")
-        try:
-            courses, chunks = rag_system.add_course_folder(
-                docs_path, clear_existing=False
-            )
-            print(f"Loaded {courses} courses with {chunks} chunks")
-        except Exception as e:
-            print(f"Error loading documents: {e}")
 
 
 # Custom static file handler with no-cache headers for development
